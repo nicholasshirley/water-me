@@ -6,22 +6,32 @@
     <%= csp_meta_tag %>
 
     <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
-    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.0/css/bulma.css">
 
+    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
     <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
+    <script defer src="https://use.fontawesome.com/releases/v5.0.10/js/all.js" integrity="sha384-slN8GvtUJGnv6ca26v8EzVaR9DC58QEwsIk9q1QXdCU8Yu8ck/tL/5szYlBbqmS+" crossorigin="anonymous"></script>
   </head>
 
   <body>
-    <div class="container" data-behavior="vue">
+    <div data-behavior="vue">
 
       <!-- Catch and display errors, if any -->
       <% flash.each do |type, messages| %>
         <% if messages.is_a?(Array) %>
-          <% messages.each do |message| %>  
-            <div class="alert alert-<%=type%>"><%= message %> </div>
-          <% end %>
+          <article class="message is-<%= type %>">
+            <% messages.each do |message| %>
+              <div class="message-body">
+                <div><%= message %></div>
+              </div>
+            <% end %>
+          </article>
         <% else %>
-          <div class="alert alert-<%= type %>"><%= messages %> </div>
+          <article class="message is-<%= type %>">
+            <div class="message-body">
+              <div><%= messages %></div>
+            </div>
+          </article>
         <% end %>
       <% end %>
 
