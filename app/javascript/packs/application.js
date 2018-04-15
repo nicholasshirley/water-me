@@ -10,10 +10,12 @@
 import TurbolinksAdapter from 'vue-turbolinks';
 import Vue from 'vue/dist/vue.esm'
 import App from '../app.vue'
+import NavBar from '../nav-bar.vue'
 
 Vue.use(TurbolinksAdapter)
 
 Vue.component('app', App)
+Vue.component('nav-bar', NavBar)
 
 document.addEventListener('turbolinks:load', () => {
   const app = new Vue({
