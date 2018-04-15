@@ -82,4 +82,8 @@ RSpec.configure do |config|
   # configure custom route helper
   config.include Rails.application.routes.url_helpers
   end
+
+  # Login user helper
+  config.include Devise::Test::IntegrationHelpers, type: :request
+  config.include RequestSpecHelper, type: :request
 end
