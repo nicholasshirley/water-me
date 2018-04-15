@@ -1,0 +1,27 @@
+function piResponse() {
+piSetCookie('visitor_id36622', '438032012', 3650);
+piSetCookie('visitor_id36622-hash', 'c5558b59cb03d3b7aa54ffad66a91bb69267b3ff0b7ed6a47384a7dacffda83076e5cfbc056602568fa56594d9fd419609e701a6', 3650);
+
+if (document.location.protocol != "https:" || (document.location.protocol == "https:" && false)) {
+var analytics_link = document.location.protocol + "//" + "hello.heroku.com/analytics?";
+pi.tracker.visitor_id='438032012';
+
+pi.tracker.visitor_id_sign='c5558b59cb03d3b7aa54ffad66a91bb69267b3ff0b7ed6a47384a7dacffda83076e5cfbc056602568fa56594d9fd419609e701a6';
+
+var variables = 'conly=true';
+for (property in pi.tracker) {
+	variables += "&"+property+"="+pi.tracker[property];
+}
+var headID = document.getElementsByTagName("head")[0];
+piScriptObj[piScriptNum] = document.createElement('script');
+piScriptObj[piScriptNum].type = 'text/javascript';
+piScriptObj[piScriptNum].src = analytics_link + variables;
+headID.appendChild(piScriptObj[piScriptNum]);
+piScriptObj[piScriptNum].onload = function() { return; }
+}
+}
+piResponse();
+
+
+
+
