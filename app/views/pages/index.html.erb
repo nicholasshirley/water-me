@@ -1,1 +1,5 @@
-<app></app>
+<% if current_user %>
+  Logged in
+<% else %>
+  <%= render 'landing' %>
+<% end %>
