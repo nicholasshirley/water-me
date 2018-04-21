@@ -72,7 +72,27 @@ RSpec.describe 'Log entries', type: :request do
   end
 
   describe 'GET an edit form for a single log entry' do
+    let(:log_entry) { FactoryBot.create(:log_entry) }
 
+    context 'when the user is logged in' do
+      before(:each) { sign_in user }
+
+      it 'returns the page' do
+        get edit_log_entry_path(log_entry)
+
+        expect(response).to have_http_status(200)
+      end
+    end
+
+    context 'when the user is not logged in' do
+      before(:each) { sign_out user }
+
+      it 'redirects to sign in' do
+        get edit_log_entry_path(log_entry)
+
+        expect(response).to redirect_to new_user_session_path
+      end
+    end
   end
 
   describe 'POST a new log entry' do
