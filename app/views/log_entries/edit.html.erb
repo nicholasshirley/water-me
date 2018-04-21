@@ -1,0 +1,15 @@
+<div class="container">
+  <div class="section">
+    <div class="columns is-centered">
+      <div class="column is-4">
+        <%= form_for @entry do |f| %>
+          <entry-form 
+            :errors="<%= @entry.errors.to_json %>" 
+            :volume="<%= @entry.volume.to_json %>"
+            :date="<%= @entry.date.to_json %>">
+          </entry-form>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

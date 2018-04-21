@@ -23,7 +23,6 @@ class LogEntriesController < ApplicationController
       flash[:success] = 'Entry has been saved'
       redirect_to log_entry_path(@entry)
     else
-      # TODO this needs to be changed to target error messages on page/in component
       render :new
     end
   end
@@ -42,9 +41,7 @@ class LogEntriesController < ApplicationController
       flash[:success] = 'The entry has been updated'
       redirect_to log_entry_path(@entry)
     else
-      # TODO this needs to chagne to target error messages on the page/in component
-      flash[:danger] = @entry.errors.full_messages
-      redirect_to edit_log_entry_path(@entry)
+      render :edit
     end
   end
 

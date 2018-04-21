@@ -3,7 +3,7 @@
     <div class="field">
       <label class="label">Entry Date</label>
       <div class="control has-icons-left">
-        <datepicker id="date" name="date" placeholder="Pick the date" input-class="input"></datepicker>
+        <datepicker id="date" name="date" placeholder="Pick the date" input-class="input" :value="date"></datepicker>
         <span class="icon is-left is-small">
           <i class="fas fa-calendar-alt"></i>
         </span>
@@ -16,7 +16,7 @@
     <div class="field">
       <label class="label">Volume</label>
       <div class="control has-icons-left">
-        <input :class="['input', errors.volume ? 'is-danger' : '']" id="volume" name="volume" type="number">
+        <input :class="['input', errors.volume ? 'is-danger' : '']" id="volume" name="volume" type="number" :value="volume">
         <span class="icon is-small is-left">
           <i class="fas fa-tint"></i>
         </span>
@@ -44,6 +44,16 @@
       }
     },
     components: Datepicker,
-    props: ["errors"],
+    props: {
+      errors: {
+        default: ''
+      },
+      volume: {
+        default: ''
+      },
+      date: {
+        default: ''
+      }
+    }
   }
 </script>
