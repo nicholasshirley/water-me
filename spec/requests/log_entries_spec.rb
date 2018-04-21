@@ -246,13 +246,6 @@ RSpec.describe 'Log entries', type: :request do
               volume: 20
             )
           end
-
-          it 'redirects with an error message' do
-            patch log_entry_path(LogEntry.last), params: empty_date_params
-
-            expect(flash[:danger]).not_to be_empty
-            expect(response).to redirect_to edit_log_entry_path(LogEntry.last)
-          end
         end
 
         context 'the volume is removed' do
@@ -265,13 +258,6 @@ RSpec.describe 'Log entries', type: :request do
               date: Date.tomorrow,
               volume: ''
             )
-          end
-
-          it 'redirects with an error message' do
-            patch log_entry_path(LogEntry.last), params: empty_volume_params
-
-            expect(flash[:danger]).not_to be_empty
-            expect(response).to redirect_to edit_log_entry_path(LogEntry.last)
           end
         end
       end
