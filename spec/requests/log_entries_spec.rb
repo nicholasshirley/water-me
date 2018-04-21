@@ -96,7 +96,40 @@ RSpec.describe 'Log entries', type: :request do
   end
 
   describe 'POST a new log entry' do
+    valid_params = { log_entry: { date: Date.today, volume: 10 } }
 
+    context 'when the user is signed in' do
+      before(:each) { sign_in user }
+
+      it 'saves the entry' do
+        expect {
+          post log_entries_path, params: valid_params
+        }.to change { LogEntry.count }.by(1)
+      end
+
+      it 'redirects with a success message' do
+        post log_entries_path, params: valid_params
+
+        expect(flash[:success]).not_to be_empty
+        expect(response).to redirect_to log_entry_path(LogEntry.last)
+      end
+    end
+
+    context 'when the user is not signed in' do
+      before(:each) { sign_out user }
+
+      it 'does not save the entry' do
+        expect {
+          post log_entries_path, params: valid_params
+        }.not_to change { LogEntry.count }
+      end
+
+      it 'redirects to sign in' do
+        post log_entries_path, params: valid_params
+
+        expect(response).to redirect_to new_user_session_path
+      end
+    end
   end
 
   describe 'PATCH/PUT an existing log entry' do
