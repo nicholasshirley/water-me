@@ -31,6 +31,19 @@ class LogEntriesController < ApplicationController
 
   end
 
+  def update
+    @entry = LogEntry.find(params[:id])
+
+    if @entry.update(log_entry_params)
+      flash[:success] = 'The entry has been updated'
+      redirect_to log_entry_path(@entry)
+    else
+      # TODO this needs to chagne to target error messages on the page/in component
+      flash[:danger] = @entry.errors.full_messages
+      redirect_to edit_log_entry_path(@entry)
+    end
+  end
+
   private
 
   def log_entry_params
