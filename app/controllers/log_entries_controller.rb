@@ -24,8 +24,7 @@ class LogEntriesController < ApplicationController
       redirect_to log_entry_path(@entry)
     else
       # TODO this needs to be changed to target error messages on page/in component
-      flash[:danger] = @entry.errors.full_messages
-      redirect_to new_log_entry_path
+      render :new
     end
   end
 
@@ -63,7 +62,7 @@ class LogEntriesController < ApplicationController
   private
 
   def log_entry_params
-    params.require(:log_entry).permit(:date, :volume)
+    params.permit(:date, :volume)
   end
 
   def check_ownership(resource, action)

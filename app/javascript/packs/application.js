@@ -8,14 +8,18 @@
 // layout file, like app/views/layouts/application.html.erb
 
 import TurbolinksAdapter from 'vue-turbolinks';
-import Vue from 'vue/dist/vue.esm'
-import App from '../app.vue'
-import NavBar from '../nav-bar.vue'
+import Vue from 'vue/dist/vue.esm';
+import App from '../app.vue';
+import NavBar from '../nav-bar.vue';
+import EntryForm from '../forms/entry-form.vue';
+import Datepicker from 'vuejs-datepicker';
 
 Vue.use(TurbolinksAdapter)
 
 Vue.component('app', App)
 Vue.component('nav-bar', NavBar)
+Vue.component('entry-form', EntryForm)
+Vue.component('datepicker', Datepicker)
 
 document.addEventListener('turbolinks:load', () => {
   const app = new Vue({
