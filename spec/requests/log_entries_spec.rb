@@ -101,17 +101,55 @@ RSpec.describe 'Log entries', type: :request do
     context 'when the user is signed in' do
       before(:each) { sign_in user }
 
-      it 'saves the entry' do
-        expect {
+      context 'and the entry is well formed' do
+        it 'saves the entry' do
+          expect {
+            post log_entries_path, params: valid_params
+          }.to change { LogEntry.count }.by(1)
+        end
+
+        it 'redirects with a success message' do
           post log_entries_path, params: valid_params
-        }.to change { LogEntry.count }.by(1)
+
+          expect(flash[:success]).not_to be_empty
+          expect(response).to redirect_to log_entry_path(LogEntry.last)
+        end
       end
 
-      it 'redirects with a success message' do
-        post log_entries_path, params: valid_params
+      context 'but the entry is not well formed:' do
+        context 'the date is missing' do
+          missing_date_params = { log_entry: { volume: 10 } }
 
-        expect(flash[:success]).not_to be_empty
-        expect(response).to redirect_to log_entry_path(LogEntry.last)
+          it 'does not save the entry' do
+            expect {
+              post log_entries_path, params: missing_date_params
+            }.not_to change { LogEntry.count }
+          end
+
+          it 'redirects to sign in' do
+            post log_entries_path, params: missing_date_params
+
+            expect(flash[:danger]).not_to be_empty
+            expect(response).to redirect_to new_log_entry_path
+          end
+        end
+
+        context 'the volume is missing' do
+          missing_volume_params = { log_entry: { date: Date.today } }
+
+          it 'does not save the entry' do
+            expect {
+              post log_entries_path, params: missing_volume_params
+            }.not_to change { LogEntry.count }
+          end
+
+          it 'redirects to sign in' do
+            post log_entries_path, params: missing_volume_params
+
+            expect(flash[:danger]).not_to be_empty
+            expect(response).to redirect_to new_log_entry_path
+          end
+        end
       end
     end
 
@@ -133,7 +171,7 @@ RSpec.describe 'Log entries', type: :request do
   end
 
   describe 'PATCH/PUT an existing log entry' do
-
+    context 'when the user is l'
   end
 
   describe 'DELETE an existing log entry' do
