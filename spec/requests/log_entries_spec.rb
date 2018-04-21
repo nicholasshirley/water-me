@@ -171,7 +171,91 @@ RSpec.describe 'Log entries', type: :request do
   end
 
   describe 'PATCH/PUT an existing log entry' do
-    context 'when the user is l'
+    before(:each) { FactoryBot.create(:log_entry) }
+    valid_patch_params = { log_entry: { date: Date.tomorrow, volume: 20 } }
+
+    context 'when the user is signed in' do
+      before(:each) { sign_in user }
+
+      context 'and the update is well formed' do
+        it 'updates the entry' do
+          patch log_entry_path(LogEntry.last), params: valid_patch_params
+
+          expect(LogEntry.last).to have_attributes(
+            date: Date.tomorrow,
+            volume: 20
+          )
+        end
+
+        it 'redirects with a success message' do
+          patch log_entry_path(LogEntry.last), params: valid_patch_params
+
+          expect(flash[:success]).not_to be_empty
+          expect(response).to redirect_to log_entry_path(LogEntry.last)
+        end
+      end
+
+      context 'but the update is not well formed:' do
+        context 'the date is removed' do
+          empty_date_params = { log_entry: { date: '', volume: 20 } }
+
+          it 'does not update the entry' do
+            patch log_entry_path(LogEntry.last), params: empty_date_params
+
+            expect(LogEntry.last).not_to have_attributes(
+              date: '',
+              volume: 20
+            )
+          end
+
+          it 'redirects with an error message' do
+            patch log_entry_path(LogEntry.last), params: empty_date_params
+
+            expect(flash[:danger]).not_to be_empty
+            expect(response).to redirect_to edit_log_entry_path(LogEntry.last)
+          end
+        end
+
+        context 'the volume is removed' do
+          empty_volume_params = { log_entry: { date: Date.tomorrow, volume: '' } }
+
+          it 'does not update the entry' do
+            patch log_entry_path(LogEntry.last), params: empty_volume_params
+
+            expect(LogEntry.last).not_to have_attributes(
+              date: Date.tomorrow,
+              volume: ''
+            )
+          end
+
+          it 'redirects with an error message' do
+            patch log_entry_path(LogEntry.last), params: empty_volume_params
+
+            expect(flash[:danger]).not_to be_empty
+            expect(response).to redirect_to edit_log_entry_path(LogEntry.last)
+          end
+        end
+      end
+    end
+
+    context 'when the user is not siged in' do
+      before(:each) { sign_out user }
+
+      it 'does not update the entry' do
+        patch log_entry_path(LogEntry.last), params: valid_patch_params
+
+        expect(LogEntry.last).not_to have_attributes(
+          date: Date.tomorrow,
+          volume: 20
+        )
+      end
+
+      it 'redirects to sign in' do
+        patch log_entry_path(LogEntry.last), params: valid_patch_params
+
+        expect(response).to redirect_to new_user_session_path
+      end
+    end
   end
 
   describe 'DELETE an existing log entry' do
