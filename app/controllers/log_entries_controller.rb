@@ -12,7 +12,7 @@ class LogEntriesController < ApplicationController
   end
 
   def new
-
+    @entry = LogEntry.new
   end
 
   def create
