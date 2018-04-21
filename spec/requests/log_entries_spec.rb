@@ -259,6 +259,38 @@ RSpec.describe 'Log entries', type: :request do
   end
 
   describe 'DELETE an existing log entry' do
+    before(:each) { FactoryBot.create(:log_entry) }
 
+    context 'when the user is logged in' do
+      before(:each) { sign_in user }
+
+      it 'remove the record' do
+        expect {
+          delete log_entry_path(LogEntry.last)
+        }.to change{ LogEntry.count }.by(-1)
+      end
+
+      it 'redirects with a success message' do
+        delete log_entry_path(LogEntry.last)
+
+        expect(flash[:success]).not_to be_empty
+      end
+    end
+
+    context 'when the user is not logged in' do
+      before(:each) { sign_out user }
+
+      it 'does not remove the record' do
+        expect {
+          delete log_entry_path(LogEntry.last)
+        }.not_to change{ LogEntry.count }
+      end
+
+      it 'redirects to sign in' do
+        delete log_entry_path(LogEntry.last)
+
+        expect(response).to redirect_to new_user_session_path
+      end
+    end
   end
 end
