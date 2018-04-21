@@ -6,7 +6,9 @@ class LogEntriesController < ApplicationController
   end
 
   def show
+    @entry = LogEntry.find(params[:id])
 
+    check_ownership(@entry, :view)
   end
 
   def new
@@ -28,13 +30,16 @@ class LogEntriesController < ApplicationController
   end
 
   def edit
+    @entry = LogEntry.find(params[:id])
 
+    check_ownership(@entry, :edit)
   end
 
   def update
     @entry = LogEntry.find(params[:id])
 
-    if @entry.update(log_entry_params)
+    if check_ownership(@entry, :chagen)
+    elsif @entry.update(log_entry_params)
       flash[:success] = 'The entry has been updated'
       redirect_to log_entry_path(@entry)
     else
@@ -47,14 +52,24 @@ class LogEntriesController < ApplicationController
   def destroy
     @entry = LogEntry.find(params[:id])
 
-    @entry.destroy
-    flash[:success] = 'The entry has been deleted'
-    redirect_to log_entries_path
+    if check_ownership(@entry, :delete)
+    else
+      @entry.destroy
+      flash[:success] = 'The entry has been deleted'
+      redirect_to log_entries_path
+    end
   end
 
   private
 
   def log_entry_params
     params.require(:log_entry).permit(:date, :volume)
+  end
+
+  def check_ownership(resource, action)
+    unless current_user.id === resource.user_id
+      flash[:danger] = "You can only #{action} entries which you own"
+      redirect_to log_entries_path
+    end
   end
 end
