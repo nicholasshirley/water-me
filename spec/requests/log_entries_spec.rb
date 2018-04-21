@@ -124,7 +124,7 @@ RSpec.describe 'Log entries', type: :request do
   end
 
   describe 'POST a new log entry' do
-    valid_params = { log_entry: { date: Date.today, volume: 10 } }
+    valid_params = { date: Date.today, volume: 10 }
 
     context 'when the user is signed in' do
       before(:each) { sign_in user }
@@ -146,36 +146,22 @@ RSpec.describe 'Log entries', type: :request do
 
       context 'but the entry is not well formed:' do
         context 'the date is missing' do
-          missing_date_params = { log_entry: { volume: 10 } }
+          missing_date_params = { volume: 10 }
 
           it 'does not save the entry' do
             expect {
               post log_entries_path, params: missing_date_params
             }.not_to change { LogEntry.count }
           end
-
-          it 'redirects to sign in' do
-            post log_entries_path, params: missing_date_params
-
-            expect(flash[:danger]).not_to be_empty
-            expect(response).to redirect_to new_log_entry_path
-          end
         end
 
         context 'the volume is missing' do
-          missing_volume_params = { log_entry: { date: Date.today } }
+          missing_volume_params = { date: Date.today }
 
           it 'does not save the entry' do
             expect {
               post log_entries_path, params: missing_volume_params
             }.not_to change { LogEntry.count }
-          end
-
-          it 'redirects to sign in' do
-            post log_entries_path, params: missing_volume_params
-
-            expect(flash[:danger]).not_to be_empty
-            expect(response).to redirect_to new_log_entry_path
           end
         end
       end
@@ -199,7 +185,7 @@ RSpec.describe 'Log entries', type: :request do
   end
 
   describe 'PATCH/PUT an existing log entry' do
-    valid_patch_params = { log_entry: { date: Date.tomorrow, volume: 20 } }
+    valid_patch_params = { date: Date.tomorrow, volume: 20 }
 
     context 'when the user is signed in' do
       before(:each) { sign_in user }
@@ -250,7 +236,7 @@ RSpec.describe 'Log entries', type: :request do
         before(:each) { FactoryBot.create(:log_entry, user_id: user.id) }
 
         context 'the date is removed' do
-          empty_date_params = { log_entry: { date: '', volume: 20 } }
+          empty_date_params = { date: '', volume: 20 }
 
           it 'does not update the entry' do
             patch log_entry_path(LogEntry.last), params: empty_date_params
@@ -270,7 +256,7 @@ RSpec.describe 'Log entries', type: :request do
         end
 
         context 'the volume is removed' do
-          empty_volume_params = { log_entry: { date: Date.tomorrow, volume: '' } }
+          empty_volume_params = { date: Date.tomorrow, volume: '' }
 
           it 'does not update the entry' do
             patch log_entry_path(LogEntry.last), params: empty_volume_params
