@@ -25,6 +25,28 @@ RSpec.describe 'Log entries', type: :request do
     end
   end
 
+  describe 'GET the new page for a log entry' do
+    context 'when the user is signed in' do
+      before(:each) { sign_in user }
+
+      it 'returns the page' do
+        get new_log_entry_path
+
+        expect(response).to have_http_status(200)
+      end
+    end
+
+    context 'when the user is not sigend in' do
+      before(:each) { sign_out user }
+
+      it 'redirects to sign in' do
+        get new_log_entry_path
+
+        expect(response).to redirect_to new_user_session_path
+      end
+    end
+  end
+
   describe 'GET the show page for a single log entry' do
 
   end
