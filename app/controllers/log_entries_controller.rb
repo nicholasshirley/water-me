@@ -44,6 +44,14 @@ class LogEntriesController < ApplicationController
     end
   end
 
+  def destroy
+    @entry = LogEntry.find(params[:id])
+
+    @entry.destroy
+    flash[:success] = 'The entry has been deleted'
+    redirect_to log_entries_path
+  end
+
   private
 
   def log_entry_params
