@@ -13,6 +13,8 @@ import App from '../app.vue';
 import NavBar from '../nav-bar.vue';
 import EntryForm from '../forms/entry-form.vue';
 import Datepicker from 'vuejs-datepicker';
+import Counter from '../forms/counter.vue';
+import axios from 'axios';
 
 Vue.use(TurbolinksAdapter)
 
@@ -20,8 +22,12 @@ Vue.component('app', App)
 Vue.component('nav-bar', NavBar)
 Vue.component('entry-form', EntryForm)
 Vue.component('datepicker', Datepicker)
+Vue.component('counter', Counter)
 
 document.addEventListener('turbolinks:load', () => {
+
+  axios.defaults.headers.common['X-CSRF-Token'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+
   const app = new Vue({
     el: '[data-behavior="vue"]',
   })
