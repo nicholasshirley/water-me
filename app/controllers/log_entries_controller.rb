@@ -2,7 +2,7 @@ class LogEntriesController < ApplicationController
   prepend_before_action :authenticate_user!
 
   def index
-
+    set_todays_volume
   end
 
   def show
@@ -35,8 +35,10 @@ class LogEntriesController < ApplicationController
 
   def update
     @entry = LogEntry.find(params[:id])
-
-    if check_ownership(@entry, :chagen)
+    if check_ownership(@entry, :change)
+    elsif params[:log_entry][:addition]
+      @volume = @entry.volume + params[:log_entry][:volume].to_i
+      @entry.update(volume: @volume)
     elsif @entry.update(log_entry_params)
       flash[:success] = 'The entry has been updated'
       redirect_to log_entry_path(@entry)
@@ -59,13 +61,21 @@ class LogEntriesController < ApplicationController
   private
 
   def log_entry_params
-    params.permit(:date, :volume)
+    params.require(:log_entry).permit(:date, :volume)
   end
 
   def check_ownership(resource, action)
-    unless current_user.id === resource.user_id
+    unless current_user.id == resource.user_id
       flash[:danger] = "You can only #{action} entries which you own"
       redirect_to log_entries_path
+    end
+  end
+
+  def set_todays_volume
+    if current_user.log_entries.where(date: Date.today).any?
+      @today = current_user.log_entries.where(date: Date.today).first
+    else
+      @today = current_user.log_entries.new(volume: 0)
     end
   end
 end
